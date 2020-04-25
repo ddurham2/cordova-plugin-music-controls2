@@ -52,7 +52,7 @@ public class MusicControls extends CordovaPlugin {
 	private boolean mediaButtonAccess=true;
 	private android.media.session.MediaSession.Token token;
 
-  	private Activity cordovaActivity;
+	private Activity cordovaActivity;
 
 	private MediaSessionCallback mMediaSessionCallback = new MediaSessionCallback();
 
@@ -74,19 +74,11 @@ public class MusicControls extends CordovaPlugin {
 
 	// Register pendingIntent for broacast
 	public void registerMediaButtonEvent(){
-
 		this.mediaSessionCompat.setMediaButtonReceiver(this.mediaButtonPendingIntent);
-
-		/*if (this.mediaButtonAccess && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2){
-		this.mAudioManager.registerMediaButtonEventReceiver(this.mediaButtonPendingIntent);
-		}*/
 	}
 
 	public void unregisterMediaButtonEvent(){
 		this.mediaSessionCompat.setMediaButtonReceiver(null);
-		/*if (this.mediaButtonAccess && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2){
-		this.mAudioManager.unregisterMediaButtonEventReceiver(this.mediaButtonPendingIntent);
-		}*/
 	}
 
 	public void destroyPlayerNotification(){
@@ -118,7 +110,7 @@ public class MusicControls extends CordovaPlugin {
 		this.mMessageReceiver = new MusicControlsBroadcastReceiver(this);
 		this.registerBroadcaster(mMessageReceiver);
 
-		
+
 		this.mediaSessionCompat = new MediaSessionCompat(context, "cordova-music-controls-media-session", null, this.mediaButtonPendingIntent);
 		this.mediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
 
@@ -141,7 +133,7 @@ public class MusicControls extends CordovaPlugin {
 				mConnection.setNotification(null, false);
 			}
 		};
-		
+
 		// Register media (headset) button event receiver
 		try {
 			this.mAudioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
@@ -164,13 +156,10 @@ public class MusicControls extends CordovaPlugin {
 	public boolean execute(final String action, final JSONArray args, final CallbackContext callbackContext) throws JSONException {
 		if (action.equals("create")) {
 			final MusicControlsInfos infos = new MusicControlsInfos(args);
-		 	final MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder();
+			final MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder();
 
 			this.cordova.getThreadPool().execute(() -> {
 				try {
-					final MusicControlsInfos infos = new MusicControlsInfos(args);
-					final MediaMetadataCompat.Builder metadataBuilder = new MediaMetadataCompat.Builder();
-
 					notification.updateNotification(infos);
 
 					// track title
@@ -194,8 +183,8 @@ public class MusicControls extends CordovaPlugin {
 						setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
 
 					callbackContext.success("success");
-				} catch (JSONException e) {
-					callbackContext.error(e.getMessage());
+				} catch (Exception ex) {
+					callbackContext.error(ex.getMessage());
 				}
 			});
 		}
@@ -203,21 +192,28 @@ public class MusicControls extends CordovaPlugin {
 		else if (action.equals("updateIsPlaying")){
 			final JSONObject params = args.getJSONObject(0);
 			final boolean isPlaying = params.getBoolean("isPlaying");
-			this.notification.updateIsPlaying(isPlaying);
-			
-			if(isPlaying)
-				setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
-			else
-				setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
-			
-			callbackContext.success("success");
+
+			this.cordova.getThreadPool().execute(() -> {
+				notification.updateIsPlaying(isPlaying);
+				if (isPlaying) {
+					setMediaPlaybackState(PlaybackStateCompat.STATE_PLAYING);
+				}
+				else {
+					setMediaPlaybackState(PlaybackStateCompat.STATE_PAUSED);
+				}
+
+				callbackContext.success("success");
+			});
 		}
 
 		else if (action.equals("updateDismissable")){
 			final JSONObject params = args.getJSONObject(0);
 			final boolean dismissable = params.getBoolean("dismissable");
-			this.notification.updateDismissable(dismissable);
-			callbackContext.success("success");
+
+			this.cordova.getThreadPool().execute(() -> {
+				notification.updateDismissable(dismissable);
+				callbackContext.success("success");
+			});
 		}
 
 		else if (action.equals("destroy")){
@@ -227,11 +223,11 @@ public class MusicControls extends CordovaPlugin {
 		}
 
 		else if (action.equals("watch")) {
-      			this.cordova.getThreadPool().execute(() -> {
-					registerMediaButtonEvent();
-					mMediaSessionCallback.setCallback(callbackContext);
-					mMessageReceiver.setCallback(callbackContext);
-      			});
+			this.cordova.getThreadPool().execute(() -> {
+				registerMediaButtonEvent();
+				mMediaSessionCallback.setCallback(callbackContext);
+				mMessageReceiver.setCallback(callbackContext);
+			});
 		}
 		return true;
 	}
@@ -253,18 +249,18 @@ public class MusicControls extends CordovaPlugin {
 		PlaybackStateCompat.Builder playbackstateBuilder = new PlaybackStateCompat.Builder();
 		if( state == PlaybackStateCompat.STATE_PLAYING ) {
 			playbackstateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
-				PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID |
-				PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH);
+					PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID |
+					PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH);
 			playbackstateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 1.0f);
 		} else {
 			playbackstateBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE | PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
-				PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID |
-				PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH);
+					PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID |
+					PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH);
 			playbackstateBuilder.setState(state, PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN, 0);
 		}
 		this.mediaSessionCompat.setPlaybackState(playbackstateBuilder.build());
 	}
-	
+
 	// Get image from url
 	private Bitmap getBitmapCover(String coverURL){
 		try{
