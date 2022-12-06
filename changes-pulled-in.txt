@@ -1,0 +1,97 @@
+
+# - https://github.com/Ekaanth/cordova-music-controls-plugin/commit/332dd -- fix iOS music controls
+efdfc7d7e3b15cd01d76b8ec5c1a21cbdcd33738
+	- resolved conflicts easily
+
+
+# remove iOS 9
+59be80a6021d3a9bb27e29e98f352a163bd6624b
+
+# use CordovaExec
+87068c8a99b6e4f4d1252e8a7ab7127f180d0616
+
+
+# background support and fixes
+2779f0459482bf376b27e9de881733ebcfe1ed42
+
+
+# run MusicControls in background
+c4461a21bef0d64ca7c5dc69d860ca44e4cc4ceb
+
+# run in background
+8b2b7259fd5f0e7be794d35f0cfd540da77dd255
+
+# fix callbacks background
+82ba99689da8aa667c6f57f7e9eac9e5b267009e
+	- resolved conflicts (were just whitespace)
+
+
+# new Modifications - MASSIVE UPDATE
+03ba1bb2ba4a3d08ad0d446a60386a44073091aa
+	- resolved conflicts -- mostly simple, but now getting some out of order compound statements.. but making it look like what it was when the changes were applied
+
+
+# removing to compartilble with capacitor -- PERHAPS THIS ONE SHOULDN'T BE MERGED IN - could revert this
+7f99bbff998cfa374d14bed03332ba0333f318c7
+	- conflicts - just had to force the file removal
+
+
+# MusicControls improvement and fixes
+e5ca507e30b751198fa05ea58c367c0752ba700c
+
+
+# Fix Android dependency duplicated
+-- ignored -- no changes result fc352bfca0d5e19d4f41238402ab9b3a0fb00d2b
+
+
+# Register ReceiverButton
+e20f67ca24da6089c3e446aad306aae1262833bf
+	- conflicts - left the extra <receiver> tags from the original repo
+
+
+# Update on Android notifications
+4cb909057d3143672125a298e929de55c6117646
+	- this one was nasty -- and might not be correct -- kept all the not-the-HEAD sections
+
+
+# Remove AndroidX anotation
+23a2be514c0f5c02c592e43b962204b7bd3cc101
+
+# Remove annoying vibration
+6ed2ae59d8e36bea1cd7f5d3d04fae520aa08fe6
+
+# Update MusicControls.java
+c59ee39e14bf7b832a7c343359076aec692bcfaf
+
+# Update MusicControls.java
+7a55ac01240e3abf2684b673c75dfc59d3740b79
+
+# Update MusicControlsNotificationKiller.java
+71d8f0370487c18898b1ef74082e5532437b1f53
+
+# Update MusicControlsNotification.java
+2abeb0736f18ce3aae92aa1ebe5f31886c4ffca1
+
+# Update plugin.xml
+-- ignored -- no changes results e705912a5953b9127aedef89166ecfb8b2958735
+
+# Update MusicControls.java
+1d0fb33399d427794032f47e1ead36e1277a20aa
+
+# Update pause icon
+2a1b9375615f7d52f066bed4a12690c82b5d8a4d
+
+# Develop consolidated change
+51e6b9fc9137ec8e14f1348985acd436842323e3
+	- MEH --- stopped here ... too ugly
+	- saved as branch -- attempt to merge in fenvalle
+
+
+### don't use random channel id which duplicates notificatoins
+###4cb9090
+
+
+
+
+
+
